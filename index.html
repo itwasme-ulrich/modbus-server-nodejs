@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Modbus</title>
+        <!-- <link rel="stylesheet" href="style.css" /> -->
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script>
+            function xml_to(x, y) {
+                document.getElementById(x).innerHTML = y;
+            }
+            function updateValue() {
+                fetch('data.json')
+                    .then((res) => res.json())
+                    .then((data) => {
+                        xml_to('value', data.sensor.value);
+
+                        setTimeout('updateValue()', 1000);
+                    })
+                    .catch(() => {
+                        setTimeout('updateValue()', 1000);
+                    });
+            }
+
+            function refreshPath() {
+                fetch('path.json')
+                    .then((res) => res.json())
+                    .then((data) => {
+                        var log = '';
+                        for (
+                            var i = 0;
+                            i < Object.keys(data.pathInfor).length;
+                            i++
+                        ) {
+                            log =
+                                log +
+                                `${data.pathInfor[i].friendlyName}` +
+                                '<br>';
+                        }
+                        xml_to('path', log);
+                    })
+                    .catch(() => {});
+                fetch('slave.json')
+                    .then((res) => res.json())
+                    .then((data) => {
+                        xml_to('currentPath', data.current.path);
+                        xml_to('currentSlave', data.current.slaveId);
+                        xml_to('currentBaud', data.current.baudRate);
+                    })
+                    .catch(() => {});
+            }
+
+            function switch_do(group) {
+                fetch('switch?switch' + group + '=2')
+                    .then((res) => res.json())
+                    .then((res) => res);
+            }
+        </script>
+    </head>
+    <body onload="updateValue()">
+        <div class="block header">
+            Modbus RTU information
+            <hr />
+            <hr />
+        </div>
+        <div class="block" id="main">Connection state</div>
+        <div class="block ctrl">
+            <fieldset>
+                <legend>Available port</legend>
+                <div class="poth">
+                    <div id="path">null</div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Currently using</legend>
+                <div class="current">
+                    <span>Path: </span>
+                    <span id="currentPath">null</span><br />
+                    <span>Slave Id: </span>
+                    <span id="currentSlave">null</span><br />
+                    <span>BaudRate: </span>
+                    <span id="currentBaud">null</span><br />
+                </div>
+            </fieldset>
+            <br />
+            <div class="block menu">
+                <div></div>
+                <div></div>
+                <button
+                    style="width: 15%; height: 40px"
+                    type="button"
+                    onclick="refreshPath()"
+                >
+                    Get
+                </button>
+            </div>
+            <br />
+
+            <fieldset>
+                <legend>Sensor - Auto</legend>
+                <div class="value">
+                    <div>Value</div>
+                    <div id="value">null</div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="block footer">
+            <hr />
+            <div>
+                <a href="mailto:itwasme.ulrich@gmail.com">Contact</a>
+            </div>
+            2022
+        </div>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "modbus_jsweb_done",
+  "version": "1.0.0",
+  "description": "modbus rtu reading using node js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "web",
+    "nodejs",
+    "modbus"
+  ],
+  "author": "ulrich",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "modbus-rtu": "^0.2.1",
+    "serialport": "^10.4.0"
+  }
+}
